@@ -1,0 +1,6 @@
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\bin\Debug\AutomataConerter.exe.config
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\bin\Debug\AutomataConerter.exe
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\bin\Debug\AutomataConerter.pdb
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\obj\Debug\AutomataConerter.csprojResolveAssemblyReference.cache
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\obj\Debug\AutomataConerter.exe
+c:\users\khoramus\documents\visual studio 2015\Projects\AutomataConerter\AutomataConerter\obj\Debug\AutomataConerter.pdb
