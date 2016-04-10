@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AutomataConverter
 {
-    class AutomataException: Exception
+    class AutomatonException: Exception
     {
         private string messageDetails;
-        public AutomataException(string messageDetails)
+        public AutomatonException(string messageDetails)
         {
             this.messageDetails = messageDetails;
         }

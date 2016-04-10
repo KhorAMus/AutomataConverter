@@ -44,10 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="AutomataBuildException.cs" />
-    <Compile Include="AutomataException.cs" />
-    <Compile Include="DeterminedFiniteAutomata.cs" />
-    <Compile Include="NamedDeterminedFiniteAutomata.cs" />
+    <Compile Include="AutomatonBuildException.cs" />
+    <Compile Include="AutomatonException.cs" />
+    <Compile Include="DeterminedFiniteAutomaton.cs" />
+    <Compile Include="NamedDeterminedFiniteAutomaton.cs" />
     <Compile Include="ExitCommand.cs" />
     <Compile Include="AutomataConverterApplication.cs" />
     <Compile Include="HelpCommand.cs" />

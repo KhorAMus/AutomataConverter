@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AutomataConverter
 {
-    class AutomataBuildException: AutomataException
+    class AutomatonBuildException: AutomatonException
     {
         
-        public AutomataBuildException(string messageDetails): base(messageDetails)
+        public AutomatonBuildException(string messageDetails): base(messageDetails)
         {
 
         }

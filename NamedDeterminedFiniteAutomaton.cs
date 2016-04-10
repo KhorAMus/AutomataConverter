@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutomataConverter
 {
-    class NamedDeterminedFiniteAutomata
+    class NamedDeterminedFiniteAutomaton
     {
         
         int startStateIndex;
@@ -47,7 +47,7 @@ namespace AutomataConverter
         {
             if (IsStateExists(name))
             {
-                throw new AutomataBuildException("State already exist.");
+                throw new AutomatonBuildException("State already exist.");
             }
             namesStatesMap.Add(name, statesNamesMap.Count);
             statesNamesMap.Add(name);
@@ -72,7 +72,7 @@ namespace AutomataConverter
         {
             if (IsTransitionExist(existingSourceIndex, existingDestinationIndex))
             {
-                throw new AutomataBuildException("Transition already exist.");
+                throw new AutomatonBuildException("Transition already exist.");
             }
             transitions[existingSourceIndex][existingDestinationIndex] = existingSymbolIndex;
         }
@@ -84,7 +84,7 @@ namespace AutomataConverter
         {
             if (IsSymbolExist(newSymbol))
             {
-                throw new AutomataBuildException("Symbol already exist.");
+                throw new AutomatonBuildException("Symbol already exist.");
             }
             namesSymbolsMap.Add(newSymbol, symbolsNamesMap.Count);
             symbolsNamesMap.Add(newSymbol);
@@ -93,7 +93,7 @@ namespace AutomataConverter
                 transition.Add(null);
             }
         }
-        public NamedDeterminedFiniteAutomata(string startState)
+        public NamedDeterminedFiniteAutomaton(string startState)
         {
             startStateIndex = 0;
             transitions = new List<List<int?>> { new List<int?>() };
