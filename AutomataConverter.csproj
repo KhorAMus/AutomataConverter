@@ -46,14 +46,16 @@
     <Compile Include="Application.cs" />
     <Compile Include="AutomatonBuildException.cs" />
     <Compile Include="AutomatonException.cs" />
+    <Compile Include="AutomatonGetInformationException.cs" />
+    <Compile Include="AutomatonProcedures.cs" />
     <Compile Include="DeterminedFiniteAutomaton.cs" />
-    <Compile Include="NamedDeterminedFiniteAutomaton.cs" />
+    <Compile Include="NamedAutomaton.cs" />
     <Compile Include="ExitCommand.cs" />
     <Compile Include="AutomataConverterApplication.cs" />
     <Compile Include="HelpCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="NondeterminedFiniteAutomata.cs" />
+    <Compile Include="NondeterminedFiniteAutomaton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

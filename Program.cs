@@ -10,12 +10,18 @@ namespace AutomataConverter
     {
         static void Main(string[] args)
         {
+            AutomataSample();
+            AutomataSample2();
             AutomataSample3();
+            AutomataSample4();
             Application app = new Application();
             app.AddCommand(new HelpCommand(app));
             app.AddCommand(new ExitCommand(app));
             app.Run();
         }
+        /// <summary>
+        /// Пример работы с автоматами
+        /// </summary>
         static void AutomataSample()
         {
             DeterminedFiniteAutomaton dfa = new DeterminedFiniteAutomaton("q0");
@@ -86,6 +92,24 @@ namespace AutomataConverter
             {
                 Console.WriteLine("По символу А из q0 нет переходов.");
             }
+        }
+        static void AutomataSample4()
+        {
+            NondeterminedFiniteAutomaton nfa = new NondeterminedFiniteAutomaton();
+            nfa.AddStates(new string[] { "q0", "q1", "q2", "q3", "q4" });
+            nfa.AddSymbols(new string[] { "a", "b" });
+            nfa.SetFinalStates(new HashSet<string>() { "q3", "q2" });
+            nfa.SetStartStates(new HashSet<string>() { "q0" });
+            nfa.AddTransition("q0", "q3", "b");
+            nfa.AddTransition("q0", "q2", "eps");
+            nfa.AddTransition("q0", "q1", "a");
+            nfa.AddTransition("q1", "q4", "b");
+            nfa.AddTransition("q2", "q1", "eps");
+            nfa.AddTransition("q3", "q2", "b");
+            nfa.AddTransition("q4", "q1", "a");
+            nfa.AddTransition("q4", "q2", "b");
+            nfa.AddTransition("q4", "q0", "b");
+            NondeterminedFiniteAutomaton NoEpsNfa = nfa.GetEquivalentDeletedEpsilons();
         }
     }
 }

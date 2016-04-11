@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AutomataConverter
 {
-    class NondeterminedFiniteAutomaton
+    class NondeterminedFiniteAutomaton: NamedAutomaton
     {
-        HashSet<int> startStatesIndices;
+        HashSet<int> startStates;
         HashSet<int> finalStates;
         /// <summary>
         /// Определяет все переходы в автомате
@@ -19,10 +19,6 @@ namespace AutomataConverter
         /// попасть по данному символу. 
         /// </summary>
         List<List<HashSet<int>>> transitions;
-        List<string> statesNamesMap;
-        List<string> symbolsNamesMap;
-        Dictionary<string, int> namesStatesMap;
-        Dictionary<string, int> namesSymbolsMap;
         public int NumberOfSymbols
         {
             get
@@ -41,26 +37,55 @@ namespace AutomataConverter
         /// Эта строка будет соответствовать символу Эпсилон
         /// </summary>
         const string emptyTransitionName = "eps";
-        public bool IsStateExist(string stateName)
+        public override bool IsStateExist(string name)
         {
-            return namesStatesMap.Keys.Contains(stateName);
+            return namesStatesMap.Keys.Contains(name);
         }
-        public void AddState(string name)
+        public override bool IsSymbolExist(string name)
+        {
+            return namesSymbolsMap.Keys.Contains(name);
+        }
+        bool CheckIsStateNameReserved(string stateName)
+        {
+            return stateName.StartsWith("r");
+        }
+
+        public void AddStates(IEnumerable<string> newStates)
+        {
+            foreach (var state in newStates)
+            {
+                AddState(state);
+            }
+        }
+        /// <summary>
+        /// Добавить новое состояние.
+        /// </summary>
+        /// <param name="name">Имя состояния</param>
+        public override void AddState(string name)
         {
             if (IsStateExist(name))
             {
-                throw new AutomatonBuildException("State already exist.");
+                throw new AutomatonBuildException($"State {name} already exist.");
             }
+            if (CheckIsStateNameReserved(name))
+            {
+                throw new AutomatonBuildException($"State {name} reserved. Please, choose other name.");
+            }
+            AddStateNoCheck(name);
+        }
+
+        void AddStateNoCheck(string name)
+        {
             namesStatesMap.Add(name, statesNamesMap.Count);
             statesNamesMap.Add(name);
             List<HashSet<int>> transitionsFrom = new List<HashSet<int>>(NumberOfStates);
-            for (int i = 0; i < NumberOfSymbols+1; i++)
+            for (int i = 0; i < NumberOfSymbols + 1; i++)
             {
                 transitionsFrom.Add(new HashSet<int>());
             }
             transitions.Add(transitionsFrom);
         }
-        public void AddTransition(string existingSource,
+        public override void AddTransition(string existingSource,
             string existingDestination, string existingSymbol)
         {
             AddTransition(namesStatesMap[existingSource],
@@ -94,7 +119,7 @@ namespace AutomataConverter
             int sourceState = existingSource;
             for (int i = 0; i < symbolsSequence.Count - 1; i++)
             {
-                AddState(GetSpecialName());                                
+                AddStateNoCheck(GetSpecialName());                                
                 AddTransition(sourceState, NumberOfStates - 1, symbolsSequence[i]);
                 sourceState = NumberOfStates - 1;
             }
@@ -107,11 +132,14 @@ namespace AutomataConverter
             specialStateNameCounter++;
             return "r" + specialStateNameCounter;
         }
-        public bool IsSymbolExist(string symbol)
+        public void AddSymbols(IEnumerable<string> newSymbols)
         {
-            return namesSymbolsMap.Keys.Contains(symbol);
+            foreach (var symbol in newSymbols)
+            {
+                AddSymbol(symbol);
+            }
         }
-        public void AddSymbol(string newSymbol)
+        public override void AddSymbol(string newSymbol)
         {
             if (IsSymbolExist(newSymbol))
             {
@@ -127,7 +155,7 @@ namespace AutomataConverter
         public void SetFinalStates(HashSet<string> finalStates)
         {
             SetFinalStates(finalStates.Select((name)
-                => (namesSymbolsMap[name])));
+                => (namesStatesMap[name])));
         }
         public void SetFinalStates(IEnumerable<int> terminalStates)
         {
@@ -135,12 +163,12 @@ namespace AutomataConverter
         }
         public void SetStartStates(HashSet<string> startStates)
         {
-            SetFinalStates(startStates.Select((name)
-                => (namesSymbolsMap[name])));
+            SetStartStates(startStates.Select((name)
+                => (namesStatesMap[name])));
         }
         public void SetStartStates(IEnumerable<int> startStates)
         {
-            this.startStatesIndices = new HashSet<int>(startStates);
+            this.startStates = new HashSet<int>(startStates);
         }
         public void AddToFinalStates(string existingState)
         {
@@ -156,7 +184,7 @@ namespace AutomataConverter
         }
         public void AddToStartStates(int existingState)
         {
-            startStatesIndices.Add(existingState);
+            startStates.Add(existingState);
         }
         public IEnumerable<string> GetTransitionDestinations(string source, string symbol)
         {
@@ -170,25 +198,38 @@ namespace AutomataConverter
         {
             return transitions[source][symbol];
         }
-        /*public NondeterminedFiniteAutomata(HashSet<int> startStates, int statesNumber)
+
+        public override List<string> GetAlphabet()
         {
-            startStatesIndices = startStates;
-            transitions = new List<List<HashSet<int>>>();
-            for (int i = 0; i < statesNumber; i++)
-            {
-                transitions.Add(new List<HashSet<int>>() { new HashSet<int>() });
-            }
-            terminalStates = new HashSet<int>();
-        }*/
+            var alphabetCopy = (namesSymbolsMap.Keys.ToList());
+            alphabetCopy.Remove(emptyTransitionName);
+            return alphabetCopy;
+        }
+
+        public override List<string> GetStates()
+        {
+            return new List<string>(namesStatesMap.Keys);
+        }
+
+        public List<string> GetStartStates()
+        {
+            return startStates.Select((index) => (statesNamesMap[index])).ToList();
+        }
+
+        public List<string> GetFinalStates()
+        {
+            return finalStates.Select((index) => (statesNamesMap[index])).ToList();
+        }
+
         public NondeterminedFiniteAutomaton()
         {
-            startStatesIndices = new HashSet<int>();
+            startStates = new HashSet<int>();
             finalStates = new HashSet<int>();
             namesStatesMap = new Dictionary<string, int>();
             statesNamesMap = new List<string>();
             namesSymbolsMap = new Dictionary<string, int>();
-            namesSymbolsMap.Add("eps", 0);
-            symbolsNamesMap = new List<string>() { "eps" };
+            namesSymbolsMap.Add(emptyTransitionName, 0);
+            symbolsNamesMap = new List<string>() { emptyTransitionName };
             transitions = new List<List<HashSet<int>>>();
 
         } 

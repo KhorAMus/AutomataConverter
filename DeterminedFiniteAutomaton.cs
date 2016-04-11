@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutomataConverter
 {
-    class DeterminedFiniteAutomaton
+    class DeterminedFiniteAutomaton: NamedAutomaton
     {
         int startStateIndex;
         HashSet<int> finalStates;
@@ -27,10 +27,6 @@ namespace AutomataConverter
         /// Если значение null, то это означает, что такого перехода не существует
         /// </summary>
         List<List<int?>> transitions;
-        List<string> statesNamesMap;
-        List<string> symbolsNamesMap;
-        Dictionary<string, int> namesStatesMap;
-        Dictionary<string, int> namesSymbolsMap;
         public int NumberOfSymbols
         {
             get
@@ -45,11 +41,34 @@ namespace AutomataConverter
                 return statesNamesMap.Count;
             }
         }
-        public bool IsStateExist(string stateName)
+        public override bool IsStateExist(string stateName)
         {
             return namesStatesMap.Keys.Contains(stateName);
         }
-        public void AddState(string name)
+        public override bool IsSymbolExist(string stateName)
+        {
+            return namesSymbolsMap.Keys.Contains(stateName);
+        }
+        public void AddStates(IEnumerable<string> newStates)
+        {
+            foreach (var state in newStates)
+            {
+                AddState(state);
+            }
+        }
+        public void AddSymbols(IEnumerable<string> newSymbols)
+        {
+            foreach (var symbol in newSymbols)
+            {
+                AddSymbol(symbol);
+            }
+        }
+        /// <summary>
+        /// Добавить новое состояние.
+        /// </summary>
+        /// <param name="name">Имя состояния</param>
+        /// <exception cref="AutomatonBuildException"></exception>
+        public override void AddState(string name)
         {
             if (IsStateExist(name))
             {
@@ -64,11 +83,27 @@ namespace AutomataConverter
             }
             transitions.Add(transitionsFrom);
         }
-        public void AddTransition(string existingSource, string existingDestination, string existingSymbol)
+        /// <summary>
+        /// Добавляет новый переход в автомат
+        /// </summary>
+        /// <param name="existingSource">Уже существующая в автомате вершина, из которой переход исходит.</param>
+        /// <param name="existingDestination">Уже существующая в автомате вершина, в которую переход входит.</param>
+        /// <param name="existingSymbol">Уже существующий в автомате символ по которому происходит переход.</param>
+        /// <exception cref="AutomatonBuildException"></exception>
+        public override void AddTransition(string existingSource, string existingDestination, string existingSymbol)
         {
+            if (!IsStateExist(existingSource))
+            {
+                throw new AutomatonBuildException($"State {existingSource} not exist.");
+            }
+            if (!IsStateExist(existingDestination))
+            {
+                throw new AutomatonBuildException($"State {existingDestination} not exist.");
+            }
             AddTransition(namesStatesMap[existingSource],
                 namesStatesMap[existingDestination], namesSymbolsMap[existingSymbol]);
         }
+
         public bool IsTransitionExist(int source, int symbol)
         {
             return transitions[source][symbol] != null;
@@ -81,12 +116,14 @@ namespace AutomataConverter
             }
             transitions[existingSource][existingSymbol] = existingDestination;
         }
-        public bool IsSymbolExist(string symbol)
+        /// <summary>
+        /// Добавляет новый символ в алфавит автомата.
+        /// </summary>
+        /// <param name="newSymbol">Имя нового  символа.</param>
+        /// <exception cref="AutomatonBuildException"></exception>
+        public override void AddSymbol(string newSymbol)
         {
-            return namesSymbolsMap.Keys.Contains(symbol);
-        }
-        public void AddSymbol(string newSymbol)
-        {
+            
             if (IsSymbolExist(newSymbol))
             {
                 throw new AutomatonBuildException("Symbol already exist.");
@@ -106,6 +143,10 @@ namespace AutomataConverter
         {
             this.finalStates =new HashSet<int> (finalStates);
         }
+        /// <summary>
+        /// Добавляет уже существующее состояние во мнеожество заключительных 
+        /// </summary>
+        /// <param name="finalState">Имя, уже существующего, состояния</param>
         public void AddToFinalStates(string finalState)
         {
             AddToFinalStates(namesStatesMap[finalState]);
@@ -114,21 +155,33 @@ namespace AutomataConverter
         {
             finalStates.Add(terminalState);
         }
-        
+        /// <summary>
+        /// Создаёт ДКА с одним начальным состоянием.
+        /// </summary>
+        /// <param name="startState">Имя начального состояния.</param>
         public DeterminedFiniteAutomaton(string startState)
         {
             startStateIndex = 0;
-            transitions = new List<List<int?>>() {new List<int?>() };
-            
-            finalStates = new HashSet<int> ();
+            transitions = new List<List<int?>>() { new List<int?>() };
+
+            finalStates = new HashSet<int>();
             statesNamesMap = new List<string>() { startState };
             namesStatesMap = new Dictionary<string, int>();
             namesStatesMap.Add(startState, 0);
             symbolsNamesMap = new List<string>();
             namesSymbolsMap = new Dictionary<string, int>();
-        }
+        } 
+
         public string GetTransitionDestination(string source, string symbol)
         {
+            if (IsSymbolExist(symbol))
+            {
+                throw new AutomatonBuildException($"Automaton's alphabet doesn't contain {symbol}");
+            }
+            if (IsStateExist(source))
+            {
+                throw new AutomatonBuildException($"Symbol {symbol} already exist.");
+            }
             int? destinationIndex = GetTransitionDestination(namesStatesMap[source],
                 namesSymbolsMap[symbol]);
             if (destinationIndex == null)
@@ -140,6 +193,25 @@ namespace AutomataConverter
         public int? GetTransitionDestination(int source, int symbol)
         {
             return transitions[source][symbol];
+        }
+
+        public override List<string> GetAlphabet()
+        {
+            return new List<string>(namesSymbolsMap.Keys.ToList());
+        }
+
+        public override List<string> GetStates()
+        {
+            return new List<string>(namesStatesMap.Keys);
+        }
+
+        public string GetStartState()
+        {
+            return statesNamesMap[startStateIndex];
+        }
+        public List<string> GetFinalStates()
+        {
+            return finalStates.Select((index) => (statesNamesMap[index])).ToList();
         }
     }
 }
