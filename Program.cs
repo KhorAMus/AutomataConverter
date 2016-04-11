@@ -10,10 +10,6 @@ namespace AutomataConverter
     {
         static void Main(string[] args)
         {
-            AutomataSample();
-            AutomataSample2();
-            AutomataSample3();
-            AutomataSample4();
             Application app = new Application();
             app.AddCommand(new HelpCommand(app));
             app.AddCommand(new ExitCommand(app));
