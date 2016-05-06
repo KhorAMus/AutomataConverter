@@ -4,3 +4,9 @@ C:\Users\khoramus\Documents\Visual Studio 2015\Projects\AutomataConverter\Automa
 C:\Users\khoramus\Documents\Visual Studio 2015\Projects\AutomataConverter\AutomataConverter\obj\Debug\AutomataConverter.csprojResolveAssemblyReference.cache
 C:\Users\khoramus\Documents\Visual Studio 2015\Projects\AutomataConverter\AutomataConverter\obj\Debug\AutomataConverter.exe
 C:\Users\khoramus\Documents\Visual Studio 2015\Projects\AutomataConverter\AutomataConverter\obj\Debug\AutomataConverter.pdb
+C:\Users\Людмила\Desktop\AutomataConverter-master\bin\Debug\AutomataConverter.exe.config
+C:\Users\Людмила\Desktop\AutomataConverter-master\bin\Debug\AutomataConverter.exe
+C:\Users\Людмила\Desktop\AutomataConverter-master\bin\Debug\AutomataConverter.pdb
+C:\Users\Людмила\Desktop\AutomataConverter-master\obj\Debug\AutomataConverter.exe
+C:\Users\Людмила\Desktop\AutomataConverter-master\obj\Debug\AutomataConverter.pdb
+C:\Users\Людмила\Desktop\AutomataConverter-master\obj\Debug\AutomataConverter.csprojResolveAssemblyReference.cache

@@ -94,11 +94,11 @@ namespace AutomataConverter
         {
             if (!IsStateExist(existingSource))
             {
-                throw new AutomatonBuildException($"State {existingSource} not exist.");
+                throw new AutomatonBuildException(string.Format("State {0} not exist.", existingSource));
             }
             if (!IsStateExist(existingDestination))
             {
-                throw new AutomatonBuildException($"State {existingDestination} not exist.");
+                throw new AutomatonBuildException(string.Format("State {0} not exist.",existingDestination));
             }
             AddTransition(namesStatesMap[existingSource],
                 namesStatesMap[existingDestination], namesSymbolsMap[existingSymbol]);
@@ -137,7 +137,7 @@ namespace AutomataConverter
         }
         public void SetFinalStates(HashSet<string> finalStates)
         {
-            SetFinalStates(finalStates.Select((name) => (namesSymbolsMap[name])));
+            SetFinalStates(finalStates.Select((name) => (namesStatesMap[name])));
         }
         public void SetFinalStates(IEnumerable<int> finalStates)
         {
@@ -174,13 +174,13 @@ namespace AutomataConverter
 
         public string GetTransitionDestination(string source, string symbol)
         {
-            if (IsSymbolExist(symbol))
+            if (!IsSymbolExist(symbol))
             {
-                throw new AutomatonBuildException($"Automaton's alphabet doesn't contain {symbol}");
+                throw new AutomatonBuildException(string.Format("Automaton's alphabet doesn't contain {0}", symbol));
             }
-            if (IsStateExist(source))
+            if (!IsStateExist(source))
             {
-                throw new AutomatonBuildException($"Symbol {symbol} already exist.");
+                throw new AutomatonBuildException(string.Format("Symbol {0} already exist.", symbol));
             }
             int? destinationIndex = GetTransitionDestination(namesStatesMap[source],
                 namesSymbolsMap[symbol]);
@@ -209,7 +209,7 @@ namespace AutomataConverter
         {
             return statesNamesMap[startStateIndex];
         }
-        public List<string> GetFinalStates()
+        public override List<string> GetFinalStates()
         {
             return finalStates.Select((index) => (statesNamesMap[index])).ToList();
         }

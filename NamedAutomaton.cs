@@ -17,6 +17,8 @@ namespace AutomataConverter
         protected Dictionary<string, int> namesSymbolsMap;
         public abstract List<string> GetAlphabet();
         public abstract List<string> GetStates();
+
+        public abstract List<string> GetFinalStates();
         /// <summary>
         /// Добавить новое состояние.
         /// </summary>
@@ -45,6 +47,15 @@ namespace AutomataConverter
         /// </summary>
         /// <param name="name">Наименование символа</param>
         public abstract bool IsSymbolExist(string name);
+
+        public int GetSymbolIndex(string name)
+        {
+            return namesSymbolsMap[name];
+        }
+        public string GetSymbolName(int index)
+        {
+            return symbolsNamesMap[index];
+        }
         public int GetStateIndex(string name)
         {
             return namesStatesMap[name];
@@ -53,5 +64,6 @@ namespace AutomataConverter
         {
             return statesNamesMap[index];
         }
+
     }
 }

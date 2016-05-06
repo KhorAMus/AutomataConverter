@@ -8,6 +8,8 @@ namespace AutomataConverter
 {
     class AutomataConverterApplication: Application
     {
-
+        public AutomateStorage Storage { get { return storage; } }
+        AutomateStorage storage = new AutomateStorage();
+        
     }
 }

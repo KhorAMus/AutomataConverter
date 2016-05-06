@@ -65,11 +65,11 @@ namespace AutomataConverter
         {
             if (IsStateExist(name))
             {
-                throw new AutomatonBuildException($"State {name} already exist.");
+                throw new AutomatonBuildException(string.Format("State {0} already exist.", name));
             }
             if (CheckIsStateNameReserved(name))
             {
-                throw new AutomatonBuildException($"State {name} reserved. Please, choose other name.");
+                throw new AutomatonBuildException(string.Format("State {0} reserved. Please, choose other name.", name));
             }
             AddStateNoCheck(name);
         }
@@ -194,6 +194,10 @@ namespace AutomataConverter
                 (index) => (statesNamesMap[index]));
 
         }
+        public string GetEpsilonName()
+        {
+            return emptyTransitionName;
+        }
         public HashSet<int> GetTransitionDestinations(int source, int symbol)
         {
             return transitions[source][symbol];
@@ -216,7 +220,7 @@ namespace AutomataConverter
             return startStates.Select((index) => (statesNamesMap[index])).ToList();
         }
 
-        public List<string> GetFinalStates()
+        public override List<string> GetFinalStates()
         {
             return finalStates.Select((index) => (statesNamesMap[index])).ToList();
         }

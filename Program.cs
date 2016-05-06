@@ -10,9 +10,14 @@ namespace AutomataConverter
     {
         static void Main(string[] args)
         {
-            Application app = new Application();
+            AutomataConverterApplication app = new AutomataConverterApplication();
             app.AddCommand(new HelpCommand(app));
+            app.AddCommand(new ReadAvtomateCommand(app));
+            app.AddCommand(new ConvertAutomateCommand(app));
+            app.AddCommand(new WriteAutomateCommand(app));
             app.AddCommand(new ExitCommand(app));
+            app.AddCommand(new ShowStorageCommand(app));
+            app.AddCommand(new DeleteEpsilonTransitionsCommand(app));
             app.Run();
         }
         /// <summary>
@@ -31,7 +36,7 @@ namespace AutomataConverter
             dfa.AddTransition("q2", "q1", "b");
             dfa.AddToFinalStates("q1");
             string fromQ0ByB = dfa.GetTransitionDestination("q0", "b");
-            Console.WriteLine($"Переход по символу b из состояния q0 приведёт в состояние: {fromQ0ByB}");
+            Console.WriteLine("Переход по символу b из состояния q0 приведёт в состояние: {0}", fromQ0ByB);
         }
         static void AutomataSample2()
         {
