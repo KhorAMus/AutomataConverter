@@ -59,12 +59,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertAutomateCommand.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="AutomateStorage.cs" />
     <Compile Include="AutomatonBuildException.cs" />
     <Compile Include="AutomatonException.cs" />
     <Compile Include="AutomatonGetInformationException.cs" />
     <Compile Include="AutomatonProcedures.cs" />
+    <Compile Include="DeleteEpsilonTransitionsCommand.cs" />
     <Compile Include="DeterminedFiniteAutomaton.cs" />
+    <Compile Include="AutomateToTableConverter.cs" />
     <Compile Include="NamedAutomaton.cs" />
     <Compile Include="ExitCommand.cs" />
     <Compile Include="AutomataConverterApplication.cs" />
@@ -74,6 +78,10 @@
     <Compile Include="NondeterminedFiniteAutomaton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadAvtomateCommand.cs" />
+    <Compile Include="ShowStorageCommand.cs" />
+    <Compile Include="TableToAutomateConverter.cs" />
+    <Compile Include="WriteAutomateCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
