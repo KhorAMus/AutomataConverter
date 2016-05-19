@@ -1,6 +1,6 @@
-	eps	b		
-q (s)	j	-			
-v	v	j,z			
-s	z	v			
-z	j	z			
-j (f)	s	q			
+		eps	b,a		
+q (f) (s)	j	-			
+v (s) (f)	v	j,z			
+s (f)		z	v			
+z (f)		j	z			
+j (f)		s	q			

@@ -67,10 +67,10 @@ namespace AutomataConverter
             {
                 throw new AutomatonBuildException(string.Format("State {0} already exist.", name));
             }
-            if (CheckIsStateNameReserved(name))
+            /*if (CheckIsStateNameReserved(name))
             {
                 throw new AutomatonBuildException(string.Format("State {0} reserved. Please, choose other name.", name));
-            }
+            }*/
             AddStateNoCheck(name);
         }
 

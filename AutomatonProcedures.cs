@@ -87,6 +87,11 @@ namespace AutomataConverter
                 {
                     noEpsilonsNfa.AddToFinalStates(state);
                 }
+
+            }
+            foreach (var state in finalStates)
+            {
+                noEpsilonsNfa.AddToFinalStates(state);
             }
             return noEpsilonsNfa;
         }
@@ -128,13 +133,19 @@ namespace AutomataConverter
             List<HashSet<string>> allSetsOfStates = new List<HashSet<string>>();
             allSetsOfStates.Add(new HashSet<string>(nfa.GetStartStates()));
             DeterminedFiniteAutomaton dfa = new DeterminedFiniteAutomaton("q0");
+
             List<string> names = new List<string>();
             dfa.AddSymbols(nfa.GetAlphabet());
+            var finalStates = nfa.GetFinalStates();
             string from, to;
             bool f = true;
             for (int allSetsCounter = 0, currentSetNumber = 0, pos; currentSetNumber<=allSetsCounter; currentSetNumber++)
             {
                 currentStates = allSetsOfStates[currentSetNumber];
+                if (currentStates.Any(state => nfa.GetFinalStates().Contains(state)))
+                {
+                    dfa.AddToFinalStates(string.Format("q{0}", currentSetNumber));
+                }
                 foreach (var symbol in nfa.GetAlphabet())
                 {                    
                     accessibleStates = GetAccessibleStates(nfa, currentStates, symbol);
@@ -150,13 +161,8 @@ namespace AutomataConverter
                             dfa.AddState(to);
                             allSetsOfStates.Add(new HashSet<string>(accessibleStates));
                         }
-                        if (accessibleStates.Count(state => nfa.GetFinalStates().Contains(state)) != 0)
-                        {
-                            dfa.AddToFinalStates(to);
-                        }
                         dfa.AddTransition(from, to, symbol);
                     }
-
                 }
             }
             return dfa;

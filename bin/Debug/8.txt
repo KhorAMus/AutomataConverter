@@ -1,0 +1,7 @@
+	eps	a,b	a	a,b,c	b,c	b,a	b
+q0 (s)	q4	-	-	-	q2	q4	-
+q1 (s)	q0,q3	q3	q2	-	-	-	q0
+q2	q4	-	-	-	-	-	-
+q3	q5	-	q5	q4	-	-	-
+q4	q5	-	-	q3	-	-	q5
+q5 (f)	-	-	-	-	-	-	-

@@ -10,7 +10,16 @@ namespace AutomataConverter
     {
         static void Main(string[] args)
         {
+
             AutomataConverterApplication app = new AutomataConverterApplication();
+            NondeterminedFiniteAutomaton nfa = new NondeterminedFiniteAutomaton();
+            nfa.AddSymbols(new string[] { "a", "b", "c" });
+            nfa.AddStates(new string[] { "q0", "q1", "q2", "q3", "q4", "q5" });
+            nfa.SetStartStates(new HashSet<string>() { "q0", "q1" });
+
+            nfa.SetFinalStates(new HashSet<string>() { "q5" });
+            /*nfa.AddTransitionBySymbolsSequence("q0", "q1", new List<int>() {"" })*/
+
             app.AddCommand(new HelpCommand(app));
             app.AddCommand(new ReadAvtomateCommand(app));
             app.AddCommand(new ConvertAutomateCommand(app));
@@ -78,7 +87,8 @@ namespace AutomataConverter
             nfa.AddSymbol("А");
             nfa.AddSymbol("Б");
             nfa.AddTransition("q0", "q2", "А");
-            nfa.AddTransitionBySymbolsSequence("q0", "q1", new List<string>() { "А", "Б", "А" });
+            nfa.
+                AddTransitionBySymbolsSequence("q0", "q1", new List<string>() { "А", "Б", "А" });
             nfa.AddTransition("q1", "q2", "Б");
             var fromQ0ByA = nfa.GetTransitionDestinations("q0", "А");
             if (fromQ0ByA.Count() != 0)

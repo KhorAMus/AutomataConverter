@@ -32,10 +32,6 @@ namespace AutomataConverter
                 Console.WriteLine("Файл '{0}' не найден", parameters[1]);
             }
             
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
         }
         public string Description { get { return "read имя путь"; } }
 

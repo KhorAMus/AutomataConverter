@@ -12,9 +12,10 @@ namespace AutomataConverter
         private List<string> startStates;
         private List<string> finalStates;
 
-        private List<string> symbols;
+        private List<List<string>> symbolsSequence;
         private List<string> states;
         private Type automateType;
+        private List<TransitionBySequence> transitionsBySequence;
         private List<Transition> transitions;
 
         /// <summary>
@@ -26,8 +27,9 @@ namespace AutomataConverter
         {
             startStates = new List<string>();
             finalStates = new List<string>();
-            symbols = new List<string>();
+            symbolsSequence = new List<List<string>>();
             states = new List<string>();
+            transitionsBySequence = new List<TransitionBySequence>();
             transitions = new List<Transition>();
             List<string> text = File.ReadAllLines(path).ToList();
             List<List<string>> table = new List<List<string>>();
@@ -52,7 +54,7 @@ namespace AutomataConverter
         private void EvalType()
         {
             if (startStates.Count > 1 ||
-                symbols.Contains("eps") ||
+                symbolsSequence.Count(i=>i.Contains("eps"))!=0 ||
                 transitions.Count(item => item.Destinations.Count > 1) != 0)
             {
                 automateType = typeof(NondeterminedFiniteAutomaton);
@@ -69,10 +71,14 @@ namespace AutomataConverter
         private void ParseTable(List<List<string>> table)
         {
             string s;
+            string[] symbolSequence;
             List<string> splited;
+
             for (int i = 0; i < table[0].Count; i++)
             {
-                symbols.Add(table[0][i]);
+                symbolSequence = table[0][i].Split(
+                    new char[] { ','}, StringSplitOptions.RemoveEmptyEntries);
+               symbolsSequence.Add(new List<string>(symbolSequence));         
             }
             for (int i = 1; i < table.Count; i++)
             {
@@ -98,9 +104,15 @@ namespace AutomataConverter
                     {
                         continue;
                     }
-
-                    transitions.Add(new Transition(states[i - 1], symbols[j - 1], splited));
-
+                    if (symbolsSequence[j - 1].Count > 1)
+                    {
+                        transitionsBySequence.Add(
+                            new TransitionBySequence(states[i - 1], symbolsSequence[j - 1], splited));
+                    }
+                    else
+                    {
+                        transitions.Add(new Transition(states[i - 1], symbolsSequence[j - 1][0], splited));
+                    }
                 }
             }
         }
@@ -112,17 +124,29 @@ namespace AutomataConverter
         private NondeterminedFiniteAutomaton TableToNFA(List<List<string>> table)
         {
             NondeterminedFiniteAutomaton nfa = new NondeterminedFiniteAutomaton();
-            for (int i = 0; i < symbols.Count; i++)
-            {
-                if (!nfa.IsSymbolExist(symbols[i]))
+            foreach(var sequence in symbolsSequence)
+            { 
+                foreach (var symbol in sequence)
                 {
-
-                    nfa.AddSymbol(symbols[i]);
+                    if (!nfa.IsSymbolExist(symbol))
+                    {
+                        nfa.AddSymbol(symbol);
+                    }
                 }
             }
+
             for (int i = 0; i < states.Count; i++)
             {
                 nfa.AddState(states[i]);
+            }
+            for (int j = 0; j < transitionsBySequence.Count; j++)
+            {
+                for (int i = 0; i < transitionsBySequence[j].Destinations.Count; i++)
+                {
+                    nfa.AddTransitionBySymbolsSequence(
+                        transitionsBySequence[j].Source, transitionsBySequence[j].Destinations[i],
+                        transitionsBySequence[j].Symbols);
+                }
             }
             for (int j = 0; j < transitions.Count; j++)
             {
@@ -146,9 +170,15 @@ namespace AutomataConverter
         {
             DeterminedFiniteAutomaton dfa = new DeterminedFiniteAutomaton(startStates[0]);
             states.Remove(startStates[0]);
-            for (int i = 0; i < symbols.Count; i++)
+            foreach (var sequence in symbolsSequence)
             {
-                dfa.AddSymbol(symbols[i]);
+                foreach (var symbol in sequence)
+                {
+                    if (!dfa.IsSymbolExist(symbol))
+                    {
+                        dfa.AddSymbol(symbol);
+                    }
+                }
             }
             for (int i = 0; i < states.Count; i++)
             {
@@ -162,6 +192,23 @@ namespace AutomataConverter
             return dfa;
         }
 
+        private class TransitionBySequence
+        {
+            public string Source { get; set; }
+            public List<string> Symbols { get; set; }
+            public List<string> Destinations { get; set; }
+
+            public TransitionBySequence()
+            {
+                Destinations = new List<string>();
+            }
+            public TransitionBySequence(string source, List<string> symbols, List<string> destinations)
+            {
+                Source = source;
+                Symbols = symbols;
+                Destinations = destinations;
+            }
+        }
         /// <summary>
         /// Переход
         /// </summary>
